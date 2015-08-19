@@ -348,13 +348,50 @@ namespace LitJson
                 return;
             }
 
-            if (obj is Int32) {
+            if (obj is Single)
+            {
+                type = JsonType.Double;
+                inst_double = (float)obj;
+                return;
+            }
+
+            if (obj is Int32)
+            {
                 type = JsonType.Int;
                 inst_int = (int) obj;
                 return;
             }
 
-            if (obj is Int64) {
+            if (obj is Int16)
+            {
+                type = JsonType.Int;
+                inst_int = (short)obj;
+                return;
+            }
+
+            if(obj is UInt16)
+            {
+                type = JsonType.Int;
+                inst_int = (ushort)obj;
+                return;
+            }
+
+            if (obj is sbyte)
+            {
+                type = JsonType.Int;
+                inst_int = (sbyte)obj;
+                return;
+            }
+
+            if (obj is byte)
+            {
+                type = JsonType.Int;
+                inst_int = (byte)obj;
+                return;
+            }
+
+            if (obj is Int64)
+            {
                 type = JsonType.Long;
                 inst_long = (long) obj;
                 return;
@@ -418,8 +455,8 @@ namespace LitJson
 
         public static explicit operator Double (JsonData data)
         {
-            if (data.type != JsonType.Double)
-                throw new InvalidCastException (
+            if (data.type != JsonType.Double && data.type != JsonType.Int && data.type != JsonType.Long)
+                throw new InvalidCastException(
                     "Instance of JsonData doesn't hold a double");
 
             return data.inst_double;
@@ -436,8 +473,8 @@ namespace LitJson
 
         public static explicit operator Int64 (JsonData data)
         {
-            if (data.type != JsonType.Long)
-                throw new InvalidCastException (
+            if (data.type != JsonType.Long && data.type != JsonType.Int)
+                throw new InvalidCastException(
                     "Instance of JsonData doesn't hold an int");
 
             return data.inst_long;
@@ -916,7 +953,16 @@ namespace LitJson
             return json;
         }
 
-        public void ToJson (JsonWriter writer)
+        public string ToJson(bool isReal)
+        {
+            if (isReal)
+            {
+                json = null;
+            }
+            return ToJson();
+        }
+
+        public void ToJson(JsonWriter writer)
         {
             bool old_validate = writer.Validate;
 
@@ -953,6 +999,21 @@ namespace LitJson
             }
 
             return "Uninitialized JsonData";
+        }
+
+
+        public void Remove(String key)
+        {
+            IDictionary _this = (IDictionary)this;
+            if (_this.Contains(key))
+            {
+                _this.Remove(key);
+            }
+        }
+
+        public bool ContainsKey(String key)
+        {
+            return ((IDictionary)this).Contains(key);
         }
     }
 

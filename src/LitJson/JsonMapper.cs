@@ -717,8 +717,15 @@ namespace LitJson
                 return;
             }
 
-            if (obj is Int32) {
-                writer.Write ((int) obj);
+            if (obj is Single)
+            {
+                writer.Write((double)(float)obj);
+                return;
+            }
+
+            if (obj is Int32)
+            {
+                writer.Write((int)obj);
                 return;
             }
 
