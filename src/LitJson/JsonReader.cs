@@ -214,11 +214,21 @@ namespace LitJson
                          (int) ParserToken.CharSeq,
                          '"');
 
-            TableAddRow (ParserToken.Text);
+            TableAddRow(ParserToken.Text);
+            TableAddCol(ParserToken.Text, '"',
+                         (int) ParserToken.String);
             TableAddCol (ParserToken.Text, '[',
                          (int) ParserToken.Array);
             TableAddCol (ParserToken.Text, '{',
                          (int) ParserToken.Object);
+            TableAddCol(ParserToken.Text, (int)ParserToken.Number,
+                         (int)ParserToken.Number);
+            TableAddCol(ParserToken.Text, (int)ParserToken.True,
+                         (int)ParserToken.True);
+            TableAddCol(ParserToken.Text, (int)ParserToken.False,
+                         (int)ParserToken.False);
+            TableAddCol(ParserToken.Text, (int)ParserToken.Null,
+                         (int)ParserToken.Null);
 
             TableAddRow (ParserToken.Value);
             TableAddCol (ParserToken.Value, '"',

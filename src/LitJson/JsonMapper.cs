@@ -439,10 +439,9 @@ namespace LitJson
                                 (PropertyInfo) prop_data.Info;
 
                             if (p_info.CanWrite)
-                                p_info.SetValue (
-                                    instance,
-                                    ReadValue (prop_data.Type, reader),
-                                    null);
+                                //use the getSetMethod.invoke instead of SetValue is to suport more platform
+                                // such as mono run in ios,jit is forbidden,so the p_info.setValue cannot be used
+                                p_info.GetSetMethod().Invoke(instance, new object[] { ReadValue(prop_data.Type, reader) });
                             else
                                 ReadValue (prop_data.Type, reader);
                         }
@@ -762,7 +761,7 @@ namespace LitJson
             if (obj is IDictionary) {
                 writer.WriteObjectStart ();
                 foreach (DictionaryEntry entry in (IDictionary) obj) {
-                    writer.WritePropertyName ((string) entry.Key);
+                    writer.WritePropertyName (entry.Key.ToString());
                     WriteValue (entry.Value, writer, writer_is_private,
                                 depth + 1);
                 }
